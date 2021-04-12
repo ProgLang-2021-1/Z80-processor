@@ -26,6 +26,7 @@ class Z80:
 			}
 
 		def setRegister(self, register: str, value: int):
+			#FIXME: Limit value bytes depending on register type
 			if register in self.registers.keys():
 				self.registers[register] = value
 			else:

@@ -4,22 +4,27 @@ class Bus:
 			self.address = 0x0000
 			self.data = 0x00
 			self.control = {
-				'M1': 0,
-				'MREQ': 0,
-				'IORQ': 0,
-				'RD': 0,
-				'WR': 0,
-				'RFSH': 0,
-				'HALT': 0,
-				'WAIT': 0,
-				'INT': 0,
-				'NMI': 0,
-				'RESET': 0,
-				'BUSRQ': 0,
-				'BUSACK': 0
+				'M1': False,
+				'MREQ': False,
+				'IORQ': False,
+				'RD': False,
+				'WR': False,
+				'RFSH': False,
+				'HALT': False,
+				'WAIT': False,
+				'INT': False,
+				'NMI': False,
+				'RESET': False,
+				'BUSRQ': False,
+				'BUSACK': False
 			}
 
-		def setControl(self, control, value):
+		def getControl(self, control: str):
+			if control in self.control.keys():
+				return self.control[control]
+			return None
+
+		def setControl(self, control: str, value: bool = False):
 			if control in self.control.keys():
 				self.control[control] = value
 			else:
@@ -27,19 +32,21 @@ class Bus:
 
 		@property
 		def data(self):
-				return self.__data
+			return self.__data
 
 		@data.setter
 		def data(self, data):
-				self.__data = data & 0xFF
-				
+			if 0 <= data <= 0xFF:
+				self.__data = data
+
 		@property
 		def address(self):
-				return self.__address
+			return self.__address
 
 		@address.setter
 		def address(self, address):
-				self.__address = address & 0xFFFF
+			if 0 <= address <= 0xFFFF:
+				self.__address = address
 		
 	instance = None
 

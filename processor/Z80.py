@@ -25,20 +25,31 @@ class Z80:
 				'PC': 0x0000,  # Registro 'Program Counter',
 			}
 
-		def setRegister(self, register, value):
-			self.registers[register] = value
+		def setRegister(self, register: str, value: int):
+			#FIXME: Limit value bytes depending on register type
+			if register in self.registers.keys():
+				self.registers[register] = value
+			else:
+				# TODO: Only print if DEBUG is active
+				print(f"{register} is not a valid register")
 
 		def getRegister(self, register):
-			return self.registers[register]
+			return self.registers.get(register, None)
 
 		def setRegisters(self, register1, register2, value):
-			self.registers[register1] = (value >> 8) & 0xFF
-			self.registers[register2] = (value & 0xFF)
+			if register1 in self.register.keys() and register2 in self.register.keys():
+				self.registers[register1] = (value >> 8) & 0xFF
+				self.registers[register2] = (value & 0xFF)
+			else:
+				print(f"{register1} and {register2} must be valid registers")
 
 		def getRegisters(self, register1, register2):
 			"""Returns a 16-bit number based on which is the union between those registers
 			"""
-			return (self.registers[register1]<<8) + self.registers[register2]
+			if register1 not in self.registers.keys() or register2 not in self.registers.keys():
+				return None
+
+			return (self.registers[register1] << 8) + self.registers[register2]
 
 	instance = None
 

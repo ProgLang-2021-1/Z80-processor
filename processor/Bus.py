@@ -1,3 +1,4 @@
+from processor.Z80 import Z80
 class Bus:
 	class __Bus:
 		def __init__(self):
@@ -18,6 +19,13 @@ class Bus:
 				'BUSRQ': False,
 				'BUSACK': False
 			}
+		def memReq(self):
+			from processor.Memory import Memory
+			Memory().getMemory()
+		def memUpdate(self):
+			from processor.Memory import Memory
+			Memory().setMemory()
+
 
 		def getControl(self, control: str):
 			if control in self.control.keys():
@@ -51,9 +59,9 @@ class Bus:
 	instance = None
 
 	def __new__(cls):	# __new__ always a classmethod
-		if not Z80.instance:
-			Z80.instance = Z80.__Z80()
-		return Z80.instance
+		if not Bus.instance:
+			Bus.instance = Bus.__Bus()
+		return Bus.instance
 
 	def __getattr__(self, name):
 		return getattr(self.instance, name)

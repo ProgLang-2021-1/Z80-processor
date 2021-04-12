@@ -14,4 +14,7 @@ def CPU_control():
 		Debug().newFunction('HALT')
 		# TODO: Stop
 		pass
+	else:
+		return False
+	return True
 

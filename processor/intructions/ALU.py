@@ -115,3 +115,6 @@ def alu():
 		add_a_number(Bus().data)
 		Debug().newFunction('ADD A, (HL)')
 		# Z80().currentfunction = 'ADD A, (HL)'
+	else:
+		return False
+	return True

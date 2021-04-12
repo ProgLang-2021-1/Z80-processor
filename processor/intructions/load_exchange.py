@@ -64,3 +64,6 @@ def load_exchange():
 		Bus().data = Z80().getRegister('A')	# Put Acumulator data in Bus
 		Bus().memUpdate()										# Request Mem write
 		Debug().newFunction('LD ({:04X}H), A'.format(Bus().address))
+	else:
+		return False
+	return True

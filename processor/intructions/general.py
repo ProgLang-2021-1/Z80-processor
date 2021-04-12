@@ -1,5 +1,6 @@
 from processor.Z80 import Z80
 from processor.Bus import Bus
+from utils.Debug import Debug
 
 non_HL_ = r'(?!110)([01]{3})'
 cc = r'[01]{3}'
@@ -20,9 +21,7 @@ def getInstruction():
 	from processor.intructions.load_exchange import load_exchange
 	from processor.intructions.rotate_shift import rotate_shift
 	memReqPC(should_increment=False)
-	alu()
-	bit_manipulation()
-	CPU_control()
-	jump_call()
-	load_exchange()
-	rotate_shift()
+	if (alu() or bit_manipulation() or CPU_control() or jump_call() or load_exchange() or rotate_shift()):
+		return True
+	Debug().newFunction('No Instruction found in PC')
+	return False

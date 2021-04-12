@@ -27,7 +27,7 @@ class Z80:
 
 		def process(self):
 			from processor.intructions.general import getInstruction
-			getInstruction()
+			return getInstruction()
 
 		def offsetPC(self, offset=1):
 			if (offset >> 8) == 1:

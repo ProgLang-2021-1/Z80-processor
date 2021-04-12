@@ -3,11 +3,18 @@ class Memory:
 		def __init__(self):
 			memory = {}
 
-		def setMemory(self, addr, value):
-			self.memory[addr] = value
+		def setMemory(self, address: int, value: int):
+			#TODO: Reserve some memory for system-specifics
+			if 0 <= address <= 0xFFFF and 0 <= value <= 0xFF:
+				self.memory[address] = value & 0xFF
+			else:
+				print("Invalid range")
+				return None
 
-		def getMemory(self, addr):
-			return self.memory[addr]
+		def getMemory(self, address: int):
+			if 0 <= address <= 0xFFFF:
+				return self.memory.get(address, 0x00)
+			return None
 
 	instance = None
 

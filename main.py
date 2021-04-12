@@ -4,6 +4,6 @@ from utils.Debug import Debug
 from processor.Memory import Memory
 
 if __name__ == '__main__':
-	for i in range (0,10):
+	for i in range (0,12):
 		Z80().process()
 	print(Debug().log)

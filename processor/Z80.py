@@ -35,6 +35,18 @@ class Z80:
 				self.registers['PC'] -= offset
 			else:
 				self.registers['PC'] += offset
+		
+		def stackPush(self):
+			Bus().address = self.getRegister('SP')
+			Bus().memUpdate()
+			self.registers['SP'] -= 1
+		
+		def stackPop(self):
+			Bus().address = self.getRegister('SP')
+			Bus().memReq()
+			self.registers['SP'] += 1
+			return value
+
 
 		def setRegister(self, register: str, value: int):
 			#FIXME: Limit value bytes depending on register type
@@ -61,6 +73,20 @@ class Z80:
 			set_bit(1<<2,PV)
 			set_bit(1<<1,N)
 			set_bit(1<<0,C)
+
+		def getFlag(self, flag):
+			if flag == 'S':
+				return (self.getRegister('F') & 1<<7) >> 7
+			if flag == 'Z':
+				return (self.getRegister('F') & 1<<6) >> 6
+			if flag == 'H':
+				return (self.getRegister('F') & 1<<4) >> 4
+			if flag == 'P/V':
+				return (self.getRegister('F') & 1<<2) >> 2
+			if flag == 'N':
+				return (self.getRegister('F') & 1<<1) >> 1
+			if flag == 'C':
+				return (self.getRegister('F') & 1<<0) >> 0
 
 		def getRegisters(self, register1, register2):
 			"""Returns a 16-bit number based on which is the union between those registers

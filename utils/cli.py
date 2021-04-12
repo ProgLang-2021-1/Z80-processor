@@ -8,6 +8,7 @@ import re
 
 from processor.Z80 import Z80
 from processor.Memory import Memory
+from processor.Bus import Bus
 from utils.Debug import Debug
 
 console = Console()
@@ -102,6 +103,13 @@ def get_memory_module():
 			table.add_row('[bold green]{:04X}[/bold green]'.format(i<<4),match.group(0))
 	return table
 
+def get_bus_module():
+	table = Table(title='Buses', width=70, box=CUSTOM_ROUNDED)
+	table.add_column('[bold green]Data Bus[/bold green]', justify='center')
+	table.add_column('[bold green]Address Bus[/bold green]', justify='center')
+	table.add_row('{:02X}'.format(Bus().data),'{:04X}'.format(Bus().address))
+	return table
+
 def print_main_options():
 	console.print('[{0}r{1}]un [{0}c{1}]ompile [{0}a{1}]ssemble [{0}q{1}]uit'.format('[bold green]','[/bold green]'),justify='center')
 	return console.input(prompt='====> ')
@@ -109,6 +117,7 @@ def print_main_options():
 def printprocessor():
 	console.print('Last processed function = ',Debug().lastFunction, justify='center')
 	console.print(get_register_module(), justify='center')
+	console.print(get_bus_module(), justify='center')
 	console.print(get_memory_module(), justify='center')
 	console.print('[{0}s{1}]tep [{0}p{1}]rocess [{0}l{1}]oad memory [{0}b{1}]ack [{0}q{1}]uit'.format('[bold green]','[/bold green]'),justify='center')
 	return console.input(prompt='====> ')

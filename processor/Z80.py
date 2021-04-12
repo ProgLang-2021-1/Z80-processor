@@ -1,7 +1,6 @@
 class Z80:
 	class __Z80:
 		def __init__(self):
-			# 8 bits registers
 			self.registers = {
 				'A': 0x00, 'A\'': 0x00,  # Acumulator
 				'F': 0x00, 'F\'': 0x00,  # Flags 
@@ -26,28 +25,30 @@ class Z80:
 				'PC': 0x0000,  # Registro 'Program Counter',
 			}
 
-		instance = None
+		def setRegister(self, register, value):
+			self.registers[register] = value
 
-		def __new__(cls):  # __new__ always a classmethod
-			if not Z80.instance:
-				Z80.instance = Z80.__Z80()
-			return Z80.instance
+		def getRegister(self, register):
+			return self.registers[register]
 
-		def __getattr__(self, name):
-			return getattr(self.instance, name)
+		def setRegisters(self, register1, register2, value):
+			self.registers[register1] = (value >> 8) & 0xFF
+			self.registers[register2] = (value & 0xFF)
 
-		def __setattr__(self, name):
-			return setattr(self.instance, name)
-		
-		def setRegister(name, value):
-			self.registers[name] = value
+		def getRegisters(self, register1, register2):
+			"""Returns a 16-bit number based on which is the union between those registers
+			"""
+			return (self.registers[register1]<<8) + self.registers[register2]
 
-		def getRegister(name):
-			return self.registers[name]
+	instance = None
 
-		def setRegisters(name1, name2, value):
-			self.registers[name1] = (value >> 8)<<4
-			self.registers[name2] = (value & 0xFF)
+	def __new__(cls):  # __new__ always a classmethod
+		if not Z80.instance:
+			Z80.instance = Z80.__Z80()
+		return Z80.instance
 
-		def getRegisters(name1, name2):
-			return (self.registers[name1]<<8) + self.registers[name2]
+	def __getattr__(self, register):
+		return getattr(self.instance, register)
+
+	def __setattr__(self, register):
+		return setattr(self.instance, register)

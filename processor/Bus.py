@@ -1,3 +1,5 @@
+from processor.Z80 import Z80
+from utils.Debug import Debug
 class Bus:
 	class __Bus:
 		def __init__(self):
@@ -18,6 +20,18 @@ class Bus:
 				'BUSRQ': False,
 				'BUSACK': False
 			}
+		def memReq(self):
+			from processor.Memory import Memory
+
+			Debug().newLog('Memory read request')
+			Memory().getMemory()
+		
+		def memUpdate(self):
+			from processor.Memory import Memory
+
+			Debug().newLog('Memory write request')
+			Memory().setMemory()
+
 
 		def getControl(self, control: str):
 			if control in self.control.keys():
@@ -38,6 +52,7 @@ class Bus:
 		def data(self, data):
 			if 0 <= data <= 0xFF:
 				self.__data = data
+				Debug().newLog('\tNew data bus entry: {:02X}'.format(data))
 
 		@property
 		def address(self):
@@ -47,13 +62,14 @@ class Bus:
 		def address(self, address):
 			if 0 <= address <= 0xFFFF:
 				self.__address = address
+				Debug().newLog('\tNew address bus entry: {:04X}'.format(address))
 		
 	instance = None
 
 	def __new__(cls):	# __new__ always a classmethod
-		if not Z80.instance:
-			Z80.instance = Z80.__Z80()
-		return Z80.instance
+		if not Bus.instance:
+			Bus.instance = Bus.__Bus()
+		return Bus.instance
 
 	def __getattr__(self, name):
 		return getattr(self.instance, name)

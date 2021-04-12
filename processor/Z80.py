@@ -25,6 +25,29 @@ class Z80:
 				'PC': 0x0000,  # Registro 'Program Counter',
 			}
 
+		def process(self):
+			from processor.intructions.general import getInstruction
+			getInstruction()
+
+		def offsetPC(self, offset=1):
+			if (offset >> 8) == 1:
+				offset = (~offset & 0xFF) - 0x01
+				self.registers['PC'] -= offset
+			else:
+				self.registers['PC'] += offset
+		
+		def stackPush(self):
+			Bus().address = self.getRegister('SP')
+			Bus().memUpdate()
+			self.registers['SP'] -= 1
+		
+		def stackPop(self):
+			Bus().address = self.getRegister('SP')
+			Bus().memReq()
+			self.registers['SP'] += 1
+			return value
+
+
 		def setRegister(self, register: str, value: int):
 			#FIXME: Limit value bytes depending on register type
 			if register in self.registers.keys():
@@ -36,12 +59,34 @@ class Z80:
 		def getRegister(self, register):
 			return self.registers.get(register, None)
 
-		def setRegisters(self, register1, register2, value):
-			if register1 in self.register.keys() and register2 in self.register.keys():
-				self.registers[register1] = (value >> 8) & 0xFF
-				self.registers[register2] = (value & 0xFF)
-			else:
-				print(f"{register1} and {register2} must be valid registers")
+		def setFlags(self, S, Z, H, PV, N, C):
+			def set_bit(mask, x):
+				"""Set the index:th bit of v to 1 if x is truthy, else to 0, and return the new value."""
+				flag = self.getRegister('F')
+				flag &= ~mask								# Clear the bit indicated by the mask (if x is False)
+				if x:
+					flag |= mask							# If x was True, set the bit indicated by the mask.
+				self.setRegister('F', flag)	# Return the result, we're done.
+			set_bit(1<<7,S)
+			set_bit(1<<6,Z)
+			set_bit(1<<4,H)
+			set_bit(1<<2,PV)
+			set_bit(1<<1,N)
+			set_bit(1<<0,C)
+
+		def getFlag(self, flag):
+			if flag == 'S':
+				return (self.getRegister('F') & 1<<7) >> 7
+			if flag == 'Z':
+				return (self.getRegister('F') & 1<<6) >> 6
+			if flag == 'H':
+				return (self.getRegister('F') & 1<<4) >> 4
+			if flag == 'P/V':
+				return (self.getRegister('F') & 1<<2) >> 2
+			if flag == 'N':
+				return (self.getRegister('F') & 1<<1) >> 1
+			if flag == 'C':
+				return (self.getRegister('F') & 1<<0) >> 0
 
 		def getRegisters(self, register1, register2):
 			"""Returns a 16-bit number based on which is the union between those registers

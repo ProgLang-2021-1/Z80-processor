@@ -26,18 +26,8 @@ class Z80:
 			}
 
 		def process(self):
-			from processor.intructions.ALU import alu
-			from processor.intructions.bit_manipulation import bit_manipulation
-			from processor.intructions.CPU_control import CPU_control
-			from processor.intructions.jump_call import jump_call
-			from processor.intructions.load_exchange import load_exchange
-			from processor.intructions.rotate_shift import rotate_shift
-			alu()
-			bit_manipulation()
-			CPU_control()
-			jump_call()
-			load_exchange()
-			rotate_shift()
+			from processor.intructions.general import getInstruction
+			getInstruction()
 
 		def offsetPC(self, offset=1):
 			if (offset >> 8) == 1:

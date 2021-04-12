@@ -1,5 +1,6 @@
 from processor.Bus import Bus
 from processor.Z80 import Z80
+from utils.Debug import Debug
 from processor.intructions.general import *
 from utils.enums import Register
 
@@ -58,14 +59,13 @@ def alu():
 	ADD_A_R = rf'10000(?P<r>{non_HL_})'
 	ADD_A__HL_ = rf'10000110'
 
-	memReqPC(should_increment=False)
 	# CP N    compara el valor N y el acumulador  A-N
 	if match := re.search(CP_N, '{0:08b}'.format(Bus().data)):
 		Z80().offsetPC()
 		memReqPC()
 		number = Bus().data
 		sub_a_number(number, update=False)
-		# Z80().currentfunction = 'LD {}, {:02X}H'.format(register.name, value)
+		Debug().newFunction('CP {:02X}H'.format(number))
 
 	# CP R    compara el valor en el registro R y el acumulador  A-(R)
 	elif match := re.search(CP_R, '{0:08b}'.format(Bus().data)):
@@ -73,7 +73,7 @@ def alu():
 		register = Register(match.group('r')).name
 		number = Z80().getRegister(register)
 		sub_a_number(number, update=False)
-		# Z80().currentfunction = 'LD {}, {:02X}H'.format(register, number)
+		Debug().newFunction(f'CP {register}')
 
 	# CP (HL)    compara el valor en la direccion en memoria HL R y el acumulador  A-(HL)
 	elif match := re.search(CP__HL_, '{0:08b}'.format(Bus().data)):
@@ -83,14 +83,14 @@ def alu():
 		Bus().memReq()	
 		number=Bus().data		
 		sub_a_number(number, update=False)
-		# Z80().currentfunction = 'LD {}, {:02X}H'.format(register, number)
+		Debug().newFunction('CP (HL)')
 
 
 	# CPL one's complement
 	elif match := re.search(CPL, '{0:08b}'.format(Bus().data)):
 		Z80().offsetPC()
 		Z80().setRegister('A', ~ Z80().getRegister('A') & 0XFF)
-		# Z80().currentfunction = 'CPL'
+		Debug().newFunction('CPL')
 
 
 	# Sub reg
@@ -98,14 +98,14 @@ def alu():
 		Z80().offsetPC()
 		register = Register(match.group('r')).name
 		sub_a_number(Z80().getRegister(register))
-		# Z80().currentfunction = 'SUB {}'.format(register)
+		Debug().newFunction(f'SUB {register}')
 	
 	# Add acumulator reg
 	elif match := re.search(ADD_A_R, '{0:08b}'.format(Bus().data)):
 		Z80().offsetPC()
 		register = Register(match.group('r')).name
 		add_a_number(Z80().getRegister(register))
-		# Z80().currentfunction = f'ADD A, {register}'
+		Debug().newFunction(f'ADD A, {register}')
 	
 	# Add acumulator (HL)
 	elif match := re.search(ADD_A__HL_, '{0:08b}'.format(Bus().data)):
@@ -113,4 +113,5 @@ def alu():
 		Bus().address = Z80().getRegisters('H','L')
 		Bus().memReq()
 		add_a_number(Bus().data)
+		Debug().newFunction('ADD A, (HL)')
 		# Z80().currentfunction = 'ADD A, (HL)'

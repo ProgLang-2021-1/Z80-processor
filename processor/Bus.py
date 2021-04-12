@@ -1,4 +1,5 @@
 from processor.Z80 import Z80
+from utils.Debug import Debug
 class Bus:
 	class __Bus:
 		def __init__(self):
@@ -21,9 +22,14 @@ class Bus:
 			}
 		def memReq(self):
 			from processor.Memory import Memory
+
+			Debug().newLog('Memory read request')
 			Memory().getMemory()
+		
 		def memUpdate(self):
 			from processor.Memory import Memory
+
+			Debug().newLog('Memory write request')
 			Memory().setMemory()
 
 
@@ -46,6 +52,7 @@ class Bus:
 		def data(self, data):
 			if 0 <= data <= 0xFF:
 				self.__data = data
+				Debug().newLog('\tNew data bus entry: {:02X}'.format(data))
 
 		@property
 		def address(self):
@@ -55,6 +62,7 @@ class Bus:
 		def address(self, address):
 			if 0 <= address <= 0xFFFF:
 				self.__address = address
+				Debug().newLog('\tNew address bus entry: {:04X}'.format(address))
 		
 	instance = None
 

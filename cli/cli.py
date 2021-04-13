@@ -20,6 +20,8 @@ def runcli():
 			console.print('Not implemented yet', justify='center')
 		elif proccess == 'a':
 			console.print('Not implemented yet', justify='center')
+		elif proccess == 'l':
+			console.print('Not implemented yet', justify='center')
 			# console.print('Please enter file name', justify='center')
 			# filename = console.input(prompt='====> ')
 			# assemble(filename)

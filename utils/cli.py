@@ -54,7 +54,7 @@ def register(name1, name2 = '', isflag = False):
 	if name2 != '':
 		if (name1 in Debug().register and name2 in Debug().register):
 			return ('[blue]{0:<2}{1:<2}[/] = [cyan]{{{0}:02X}} {{{1}:02X}}[/]').format(name1, name2).format(**Z80().registers)
-		elif (name2 in Debug().register):
+		elif (name1 in Debug().register):
 			return ('[blue]{0:<2}{1:<2}[/] = [cyan]{{{0}:02X}}[/] {{{1}:02X}}').format(name1, name2).format(**Z80().registers)
 		elif (name2 in Debug().register):
 			return ('[blue]{0:<2}{1:<2}[/] = {{{0}:02X}} [cyan]{{{1}:02X}}[/]').format(name1, name2).format(**Z80().registers)
@@ -69,7 +69,7 @@ def register(name1, name2 = '', isflag = False):
 	
 
 def get_register_module():
-	table = Table(title='Z80', width=80, show_header=False, box=CUSTOM_ROUNDED)
+	table = Table(title='Z80', width=70, show_header=False, box=CUSTOM_ROUNDED)
 
 	table.add_column(' ', justify='center')
 	table.add_column(' ', justify='center')
@@ -108,7 +108,7 @@ def check_memory_row(row):
 				mem += '{:02X} '.format(0)
 	return mem
 def get_memory_module():
-	table = Table(title='Memory', width=80, box=CUSTOM_ROUNDED)
+	table = Table(title='Memory', width=70, box=CUSTOM_ROUNDED)
 	table.add_column('[bold blue]Offset[/bold blue]', justify='right')
 	table.add_column('[bold green]00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F [/]', justify='left')
 	for i in range(0, 0xFFF+1):
@@ -118,7 +118,7 @@ def get_memory_module():
 	return table
 
 def get_bus_module():
-	table = Table(title='Buses', width=80, box=CUSTOM_ROUNDED)
+	table = Table(title='Buses', width=70, box=CUSTOM_ROUNDED)
 	table.add_column('[bold green]Data Bus[/]', justify='center')
 	table.add_column('[bold green]Address Bus[/]', justify='center')
 	table.add_row('{:02X}'.format(Bus().data),'{:04X}'.format(Bus().address))
@@ -129,7 +129,7 @@ def print_main_options():
 	return console.input(prompt='====> ')
 
 def printprocessor():
-	console.print('Last processed function = ',Debug().lastFunction, justify='center')
+	console.print('Last processed instruction = ',Debug().lastFunction, justify='center')
 	console.print(get_register_module(), justify='center')
 	console.print(get_bus_module(), justify='center')
 	console.print(get_memory_module(), justify='center')

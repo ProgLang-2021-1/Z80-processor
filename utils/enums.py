@@ -14,6 +14,7 @@ class Register(Enum):
 	SP = '11'
 	AF = '11'
 
+
 class Flags(Enum):
 	S = 1 << 7
 	Z = 1 << 6

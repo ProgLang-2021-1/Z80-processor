@@ -125,7 +125,7 @@ def get_bus_module():
 	return table
 
 def print_main_options():
-	console.print('[{0}r{1}]un [{0}c{1}]ompile [{0}a{1}]ssemble [{0}q{1}]uit'.format('[bold green]','[/]'),justify='center')
+	console.print('[{0}r{1}]un [{0}c{1}]ompile [{0}a{1}]ssemble [{0}l{1}]ink [{0}q{1}]uit'.format('[bold green]','[/]'),justify='center')
 	return console.input(prompt='====> ')
 
 def printprocessor():

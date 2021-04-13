@@ -5,6 +5,9 @@ import os
 import platform
 import re
 
+from assembler.assembler import assemble_from_file
+from linker.linker import link
+
 from utils.cli import *
 
 def runcli():
@@ -19,12 +22,12 @@ def runcli():
 		if proccess == 'c':
 			console.print('Not implemented yet', justify='center')
 		elif proccess == 'a':
-			console.print('Not implemented yet', justify='center')
+			filename = console.input(prompt='====> examples/')
+			assemble_from_file(f'examples/{filename}')
 		elif proccess == 'l':
-			console.print('Not implemented yet', justify='center')
-			# console.print('Please enter file name', justify='center')
-			# filename = console.input(prompt='====> ')
-			# assemble(filename)
+			console.input(prompt='====> output/test.z80.loc\t')
+			console.input(prompt='====> output/test.z80.loc.tag\t')
+			link('output/test.z80.loc', 'output/test.z80.loc.tag')
 		elif proccess == 'r':
 			cls()
 			x = printprocessor()

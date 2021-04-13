@@ -112,3 +112,6 @@ def jump_call():
 		(match.group('cc') == FlagCC.P and Z80().getFlag(FlagCC.P.name)) or
 		(match.group('cc') == FlagCC.M and Z80().getFlag(FlagCC.M.name))):
 			ret()
+	else:
+		return False
+	return True

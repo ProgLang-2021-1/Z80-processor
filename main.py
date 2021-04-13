@@ -1,9 +1,4 @@
-from processor.Z80 import Z80
-from processor.Bus import Bus
-from utils.Debug import Debug
-from processor.Memory import Memory
+from cli.cli import runcli
 
 if __name__ == '__main__':
-	for i in range (0,12):
-		Z80().process()
-	print(Debug().log)
+	runcli()

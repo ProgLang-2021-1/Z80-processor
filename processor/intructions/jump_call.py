@@ -27,10 +27,10 @@ def ret():
 	Z80().offsetPC()
 
 	Z80().stackPop()
-	val1 = Bus().data
+	val2 = Bus().data
 
 	Z80().stackPop()
-	val2 = Bus().data
+	val1 = Bus().data
 
 	Z80().setRegister('PC', (val1 << 8) + val2)
 	Debug().newFunction('RET')

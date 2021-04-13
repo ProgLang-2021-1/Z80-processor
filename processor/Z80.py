@@ -46,9 +46,9 @@ class Z80:
 		
 		def stackPop(self):
 			from processor.Bus import Bus
+			self.registers['SP'] += 1
 			Bus().address = self.getRegister('SP')
 			Bus().memReq()
-			self.registers['SP'] += 1
 
 
 		def setRegister(self, register: str, value: int):

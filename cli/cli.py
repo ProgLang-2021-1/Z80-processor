@@ -7,6 +7,7 @@ import re
 
 from assembler.assembler import assemble_from_file
 from linker.linker import link
+from loader.loader import load
 
 from utils.cli import *
 
@@ -37,11 +38,12 @@ def runcli():
 					Z80().process()
 				elif x == 'p':
 					while (Z80().process()):
-							pass
+						pass
 				elif x == 'l':
-					console.print('Not implemented yet', justify='center')
-					# loadmemory()
-					# Z80().currentfunction = 'Instructions Loaded in Memory'
+					printprocessor(False)
+					console.input(prompt='====> output/test.z80.bin\t')
+					load('output/test.z80.bin')
+					cls()
 				x = printprocessor()
 			if x == 'q':
 				break

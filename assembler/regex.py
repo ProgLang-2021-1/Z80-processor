@@ -15,6 +15,7 @@ LD_R_R = fr'^{space}LD +(?P<r1>{r}), *(?P<r2>{r}){line_ending}$'
 LD_DD_NN = fr'^{space}LD +(?P<dd>{dd}), *(?P<n1>{n})(?P<n2>{n})H{line_ending}$'
 LD__NN__A = fr'^{space}LD +\((?P<n1>{n})(?P<n2>{n})H\), *A{line_ending}$'
 
+
 CPL = fr'^{space}CPL{line_ending}$'
 CP_R = fr'^{space}CP +(?P<r>{r}){line_ending}$'
 
@@ -31,3 +32,5 @@ JR_C_TAG = fr'^{space}JR +C, *(?P<tag>\w+){line_ending}$'
 JR_TAG = fr'^{space}JR +(?P<tag>(\w+)){line_ending}$'
 
 RET_CC = fr'^{space}RET +(?P<cc>{cc}){line_ending}$'
+
+CALL = fr'^{space}CALL +(?P<tag>(\w+)){line_ending}$'

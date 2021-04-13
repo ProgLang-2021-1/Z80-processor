@@ -31,22 +31,24 @@ class Z80:
 			return getInstruction()
 
 		def offsetPC(self, offset=1):
-			if (offset >> 8) == 1:
-				offset = (~offset & 0xFF) - 0x01
+			if (offset >> 7) == 1:
+				offset = (~offset & 0xFF) + 0x01
+				
 				self.setRegister('PC', self.getRegister('PC') - offset)
 			else:
 				self.setRegister('PC', self.getRegister('PC') + offset)
 		
 		def stackPush(self):
+			from processor.Bus import Bus
 			Bus().address = self.getRegister('SP')
 			Bus().memUpdate()
 			self.registers['SP'] -= 1
 		
 		def stackPop(self):
+			from processor.Bus import Bus
 			Bus().address = self.getRegister('SP')
 			Bus().memReq()
 			self.registers['SP'] += 1
-			return value
 
 
 		def setRegister(self, register: str, value: int):

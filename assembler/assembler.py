@@ -7,6 +7,7 @@ from assembler.regex import *
 def assemble_from_file(input_file, output_file='test.z80.loc'):
 	tags = {}
 	pc = 0
+	org = False
 
 	with open(f'{input_file}', 'r') as f:
 		with open(f'output/{output_file}', 'w') as fout:
@@ -20,15 +21,17 @@ def assemble_from_file(input_file, output_file='test.z80.loc'):
 					continue
 
 				if (match := re.match(ORG, line)) and pc == 0:
-					pc += write_hex(fout, match.group('n2'))
-					pc += write_hex(fout, match.group('n1'))
+					write_hex(fout, match.group('n2'))
+					write_hex(fout, match.group('n1'))
 					fout.write('\n')
+					org = True
 					continue
 
-				elif pc == 0 and (re.match(f'^{line_ending}$', line) is None):
-					pc += write_hex(fout, '00')
-					pc += write_hex(fout, '00')
+				elif not org and (re.match(f'^{line_ending}$', line) is None):
+					write_hex(fout, '00')
+					write_hex(fout, '00')
 					fout.write('\n')
+					org = True
 
 				if match := re.match(TAG, line):
 					# fout.write(match.group(1) + ':')
@@ -74,11 +77,15 @@ def assemble_from_file(input_file, output_file='test.z80.loc'):
 					pc += write_byte(fout, FlagCC[match.group('cc')].value, pattern='0b11*000')
 
 				elif match := re.match(JR_C_TAG, line):
-					pc += write_hex(fout, '38')
+					pc += write_hex(fout, '38') + 1
 					fout.write(f'\t{pc}\t{match.group("tag")}')
 
 				elif match := re.match(JR_TAG, line):
-					pc += write_hex(fout, '18')
+					pc += write_hex(fout, '18') + 1
+					fout.write(f'\t{pc}\t{match.group("tag")}')
+
+				elif match := re.match(CALL, line):
+					pc += write_hex(fout, 'CD') + 2
 					fout.write(f'\t{pc}\t{match.group("tag")}')
 
 				if match:

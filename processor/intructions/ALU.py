@@ -4,6 +4,10 @@ from utils.Debug import Debug
 from processor.intructions.general import *
 from utils.enums import Register
 
+
+def xor_a_number(number):
+	Z80().registers['A']=Z80().registers['A'] ^ number
+
 def add_a_number(number, update=True):
 	"""
 	Binary addition between register A and [number_8|reg|indexed|(HL)].
@@ -58,6 +62,11 @@ def alu():
 	SUB_R = rf'10010(?P<r>{non_HL_})'
 	ADD_A_R = rf'10000(?P<r>{non_HL_})'
 	ADD_A__HL_ = rf'10000110'
+
+	XOR_R = rf'10101(?P<r>{non_HL_})'
+	XOR_N = rf'11101110'
+	XOR__HL__=rf'10101110'
+
 
 	# CP N    compara el valor N y el acumulador  A-N
 	if match := re.search(CP_N, '{0:08b}'.format(Bus().data)):
@@ -115,6 +124,27 @@ def alu():
 		add_a_number(Bus().data)
 		Debug().newFunction('ADD A, (HL)')
 		# Z80().currentfunction = 'ADD A, (HL)'
+
+	# XOR R , xor entre A y el registro R se guarda en A
+	elif match := re.search(XOR_R, '{0:08b}'.format(Bus().data)):
+		Z80().offsetPC()
+		xor_a_number(Z80().getRegister(Register(match.group('r')).name))
+
+	# XOR N , xor entre A y el numero n, se guarda en A
+	elif match := re.search(XOR_N, '{0:08b}'.format(Bus().data)):
+		Z80().offsetPC()
+		Bus().memReq()
+		value=Bus().data
+		xor_a_number(value)
+		# XOR N , xor entre A y el numero n, se guarda en A
+	elif match := re.search(XOR__HL__, '{0:08b}'.format(Bus().data)):
+		Z80().offsetPC()
+		Bus().address=Z80().getRegisters('H','L')
+		memReqPC()
+		value=Bus().data
+		xor_a_number(value)
+	
+	
 	else:
 		return False
 	return True

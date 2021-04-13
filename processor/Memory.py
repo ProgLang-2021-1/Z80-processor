@@ -3,8 +3,10 @@ from utils.Debug import Debug
 class Memory:
 	class __Memory:
 		def __init__(self):
-			self.memory = {0: 1, 1: 104, 2: 242, 3: 62, 4: 162, 5: 50, 6: 101, 7: 32, 8: 254, 9: 247, 10: 120, 11: 145, 12: 47, 13: 33, 14: 101, 15: 32, 16: 134, 17: 50, 18: 102, 19: 32, 20: 118}
+			self.memory = {}
 
+		def init_memory(self, memory):
+			self.memory = memory
 		def setMemory(self):
 			#TODO: Reserve some memory for system-specifics
 			address = Bus().address
@@ -22,7 +24,6 @@ class Memory:
 			if 0 <= address <= 0xFFFF:
 				Bus().data = self.memory.get(address, 0x00)
 			return None
-
 	instance = None
 
 	def __new__(cls):  # __new__ always a classmethod

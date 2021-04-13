@@ -23,5 +23,5 @@ def getInstruction():
 	memReqPC(should_increment=False)
 	if (alu() or bit_manipulation() or CPU_control() or jump_call() or load_exchange() or rotate_shift()):
 		return True
-	Debug().newFunction('No Instruction found in PC')
+	Debug().newFunction('No Instruction found in PC or ' + Debug().lastFunction)
 	return False

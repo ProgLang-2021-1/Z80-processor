@@ -128,10 +128,11 @@ def print_main_options():
 	console.print('[{0}r{1}]un [{0}c{1}]ompile [{0}a{1}]ssemble [{0}l{1}]ink [{0}q{1}]uit'.format('[bold green]','[/]'),justify='center')
 	return console.input(prompt='====> ')
 
-def printprocessor():
+def printprocessor(input = True):
 	console.print('Last processed instruction = ',Debug().lastFunction, justify='center')
 	console.print(get_register_module(), justify='center')
 	console.print(get_bus_module(), justify='center')
 	console.print(get_memory_module(), justify='center')
-	console.print('[{0}s{1}]tep [{0}p{1}]rocess [{0}l{1}]oad memory [{0}b{1}]ack [{0}q{1}]uit'.format('[bold green]','[/]'),justify='center')
-	return console.input(prompt='====> ')
+	if input:
+		console.print('[{0}s{1}]tep [{0}p{1}]rocess [{0}l{1}]oad memory [{0}b{1}]ack [{0}q{1}]uit'.format('[bold green]','[/]'),justify='center')
+		return console.input(prompt='====> ')

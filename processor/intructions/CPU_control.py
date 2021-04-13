@@ -10,11 +10,8 @@ def CPU_control():
 	HALT = rf'01110110'
 
 	if match := re.search(HALT, '{0:08b}'.format(Bus().data)):
-		Z80().offsetPC()
+		# Z80().offsetPC()
 		Debug().newFunction('HALT')
 		# TODO: Stop
-		pass
-	else:
 		return False
-	return True
 

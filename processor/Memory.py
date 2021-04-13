@@ -1,4 +1,5 @@
 from processor.Bus import Bus
+from utils.Debug import Debug
 class Memory:
 	class __Memory:
 		def __init__(self):
@@ -8,8 +9,10 @@ class Memory:
 			#TODO: Reserve some memory for system-specifics
 			address = Bus().address
 			value = Bus().data
+
 			if 0 <= address <= 0xFFFF and 0 <= value <= 0xFF:
 				self.memory[address] = value & 0xFF
+				Debug().updateMem(address)
 			else:
 				print("Invalid range")
 				return None

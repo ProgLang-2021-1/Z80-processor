@@ -1,3 +1,4 @@
+from utils.Debug import Debug
 class Z80:
 	class __Z80:
 		def __init__(self):
@@ -32,9 +33,9 @@ class Z80:
 		def offsetPC(self, offset=1):
 			if (offset >> 8) == 1:
 				offset = (~offset & 0xFF) - 0x01
-				self.registers['PC'] -= offset
+				self.setRegister('PC', self.getRegister('PC') - offset)
 			else:
-				self.registers['PC'] += offset
+				self.setRegister('PC', self.getRegister('PC') + offset)
 		
 		def stackPush(self):
 			Bus().address = self.getRegister('SP')
@@ -52,6 +53,7 @@ class Z80:
 			#FIXME: Limit value bytes depending on register type
 			if register in self.registers.keys():
 				self.registers[register] = value
+				Debug().updateReg(register)
 			else:
 				# TODO: Only print if DEBUG is active
 				print(f"{register} is not a valid register")

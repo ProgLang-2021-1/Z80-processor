@@ -3,6 +3,8 @@ class Debug:
 		def __init__(self):
 			self.log = ""
 			self.lastFunction = ""
+			self.register = []
+			self.memory = []
 
 		def newFunction(self, name):
 			self.lastFunction = name
@@ -10,6 +12,12 @@ class Debug:
 		
 		def newLog(self, message):
 			self.log += message + "\n"
+		
+		def updateReg(self, name):
+			self.register.append(name)
+		
+		def updateMem(self, addr):
+			self.memory.append(addr)
 
 	instance = None
 

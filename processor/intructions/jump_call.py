@@ -2,27 +2,34 @@ from processor.Bus import Bus
 from processor.Z80 import Z80
 from utils.Debug import Debug
 from utils.enums import FlagCC
+from utils.enums import Flags
+from utils.util import conditional_flag
 from processor.intructions.general import *
 
-def call():
+
+
+def tag_abs_addr(pushStack=False, flagcc=None):
 	Z80().offsetPC()
 
-	# Get nn 
+	# Get nn
 	memReqPC()
 	val2 = Bus().data
 	memReqPC()
 	val1 = Bus().data
 
-	# Memory update stack push first PC Value
-	Bus().data = Z80().getRegister('PC') >> 8 
-	Z80().stackPush()
-	
-	# Memory update stack push second PC Value
-	Bus().data = Z80().getRegister('PC') & 0xFF
-	Z80().stackPush()
+	if (conditional_flag(flagcc)):
+		# Memory update stack push first PC Value
+		Bus().data = Z80().getRegister('PC') >> 8 
+		if pushStack:
+			Z80().stackPush()
+		
+		# Memory update stack push second PC Value
+		Bus().data = Z80().getRegister('PC') & 0xFF
+		if pushStack:
+			Z80().stackPush()
 
-	Z80().setRegister('PC', (val1 << 8) + val2)
-	Debug().newFunction('CALL {:02X}{:02X}H'.format(val1,val2))
+		Z80().setRegister('PC', (val1 << 8) + val2)
+
 def ret():
 	Z80().offsetPC()
 
@@ -43,6 +50,8 @@ def jump_call():
 	JR_NC_E = rf'00110000'
 	JR_Z_E	= rf'00101000'
 	JR_NZ_E = rf'00100000'
+
+	JP_CC_NN = rf'11(?P<cc>{cc})010'
 
 	CALL_NN = rf'11001101'
 	CALL_CC_NN = rf'11(?P<cc>{cc})100'
@@ -84,38 +93,24 @@ def jump_call():
 			Z80().offsetPC(Bus().data)
 		Debug().newFunction('JR NZ, $+{:02X}'.format(Bus().data))
 
-
+	elif match := re.search(JP_CC_NN, '{0:08b}'.format(Bus().data)):
+		tag_abs_addr(flagcc=match.group('cc'))
+		Debug().newFunction('JP {}, NN'.format(FlagCC(match.group("cc")).name))
 
 	elif match := re.search(CALL_NN, '{0:08b}'.format(Bus().data)):
-		call()
+		tag_abs_addr(pushStack=True)
+		Debug().newFunction('CALL NN')
 
 	elif match := re.search(CALL_CC_NN, '{0:08b}'.format(Bus().data)):
-		if ((match.group('cc') == FlagCC.NZ.value and Z80().getFlag(FlagCC.NZ.name)) or
-		(match.group('cc') == FlagCC.Z.value and Z80().getFlag(FlagCC.Z.name)) or
-		(match.group('cc') == FlagCC.NC.value and Z80().getFlag(FlagCC.NC.name)) or
-		(match.group('cc') == FlagCC.C.value and Z80().getFlag(FlagCC.C.name)) or
-		(match.group('cc') == FlagCC.PO.value and Z80().getFlag(FlagCC.PO.name)) or
-		(match.group('cc') == FlagCC.PE.value and Z80().getFlag(FlagCC.PE.name)) or
-		(match.group('cc') == FlagCC.P.value and Z80().getFlag(FlagCC.P.name)) or
-		(match.group('cc') == FlagCC.M.value and Z80().getFlag(FlagCC.M.name))):
-			call()
-		else:
-			if match.group('cc') is not None:
-				Debug().newFunction(f'CALL {FlagCC(match.group("cc")).name}, NN')
-			Z80().offsetPC(2)
+		tag_abs_addr(pushStack=True, flagcc=match.group('cc'))
+		Debug().newFunction('CALL {}, NN'.format(FlagCC(match.group("cc")).name))
+
 
 	elif match := re.search(RET, '{0:08b}'.format(Bus().data)):
 		ret()
 
 	elif match := re.search(RET_CC, '{0:08b}'.format(Bus().data)):
-		if ((match.group('cc') == FlagCC.NZ.value and Z80().getFlag(FlagCC.NZ.name)) or
-		(match.group('cc') == FlagCC.Z.value and Z80().getFlag(FlagCC.Z.name)) or
-		(match.group('cc') == FlagCC.NC.value and Z80().getFlag(FlagCC.NC.name)) or
-		(match.group('cc') == FlagCC.C.value and Z80().getFlag(FlagCC.C.name)) or
-		(match.group('cc') == FlagCC.PO.value and Z80().getFlag(FlagCC.PO.name)) or
-		(match.group('cc') == FlagCC.PE.value and Z80().getFlag(FlagCC.PE.name)) or
-		(match.group('cc') == FlagCC.P.value and Z80().getFlag(FlagCC.P.name)) or
-		(match.group('cc') == FlagCC.M.value and Z80().getFlag(FlagCC.M.name))):
+		if conditional_flag(match.group("cc")):
 			ret()
 		else:
 			Debug().newFunction(f'RET {FlagCC(match.group("cc")).name}')

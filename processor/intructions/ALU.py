@@ -63,6 +63,10 @@ def alu():
 	ADD_A_R = rf'10000(?P<r>{non_HL_})'
 	ADD_A__HL_ = rf'10000110'
 
+	INC = rf'00(?P<r>{non_HL_})100'
+	
+	NEG = rf'01000100'
+
 	XOR_R = rf'10101(?P<r>{non_HL_})'
 	XOR_N = rf'11101110'
 	XOR__HL__=rf'10101110'
@@ -124,6 +128,26 @@ def alu():
 		add_a_number(Bus().data)
 		Debug().newFunction('ADD A, (HL)')
 		# Z80().currentfunction = 'ADD A, (HL)'
+
+	elif match := re.search(INC, '{0:08b}'.format(Bus().data)):
+		Z80().offsetPC()
+		register = Register(match.group('r')).name
+		value = Z80().getRegister(register)+1
+		Z80().setRegister(register, value)
+		Z80().setFlags(value & 0x80 == 0x80, value, value & 0x40 == 0x40, value == 0x7F, False, Z80().getFlag('C'))
+		Debug().newFunction(f'INC {register}')
+	
+	elif match := re.search(PREFIX_ED, '{0:08b}'.format(Bus().data)):
+		Z80().offsetPC()
+		memReqPC()
+		if match := re.search(NEG, '{0:08b}'.format(Bus().data)):
+			value = Z80().getRegister('A')
+			result = (~value) + 1
+			Z80().setRegister('A',result & 0xFF)
+			Z80().setFlags((result & 0xFF) >> 7, result == 0, (value & 0xF) > 0, value == 0x80, True, value != 0)
+			Debug().newFunction(f'NEG')
+			
+	
 
 	# XOR R , xor entre A y el registro R se guarda en A
 	elif match := re.search(XOR_R, '{0:08b}'.format(Bus().data)):

@@ -12,6 +12,8 @@ from loader.loader import load
 from utils.cli import *
 
 def runcli():
+	if not os.path.exists('output'):
+		os.makedirs('output')
 	cls()
 	get_title_module()
 	proccess = print_main_options()

@@ -12,6 +12,8 @@ from loader.loader import load
 from utils.cli import *
 
 def runcli():
+	if not os.path.exists('output'):
+		os.makedirs('output')
 	cls()
 	get_title_module()
 	proccess = print_main_options()
@@ -24,10 +26,25 @@ def runcli():
 			console.print('Not implemented yet', justify='center')
 		elif proccess == 'a':
 			filename = console.input(prompt='====> examples/')
+			filename = filename if ".z80.asm" in filename else f'{filename}.z80.asm'
 			assemble_from_file(f'examples/{filename}')
+			console.print(f'Assembling: examples/{filename}')
+			console.print('File created at: output/test.z80.loc')
+			console.print('File created at: output/test.z80.loc.tag')
 		elif proccess == 'l':
-			console.input(prompt='====> output/test.z80.loc\t')
-			console.input(prompt='====> output/test.z80.loc.tag\t')
+			console.print('Linking from: output/test.z80.loc')
+			console.print('Linking from: output/test.z80.loc.tag')
+			console.input(prompt='Press Enter to confirm...')
+			link('output/test.z80.loc', 'output/test.z80.loc.tag')
+		elif proccess == 'al':
+			filename = console.input(prompt='====> examples/')
+			filename = filename if ".z80.asm" in filename else f'{filename}.z80.asm'
+			assemble_from_file(f'examples/{filename}')
+			console.print(f'Assembling: examples/{filename}')
+			console.print('File created at: output/test.z80.loc')
+			console.print('File created at: output/test.z80.loc.tag')
+			console.print('Linking from: output/test.z80.loc')
+			console.print('Linking from: output/test.z80.loc.tag')
 			link('output/test.z80.loc', 'output/test.z80.loc.tag')
 		elif proccess == 'r':
 			cls()
@@ -41,9 +58,9 @@ def runcli():
 						pass
 				elif x == 'l':
 					printprocessor(False)
-					console.input(prompt='====> output/test.z80.bin\t')
 					load('output/test.z80.bin')
 					cls()
+					console.print('Memory loaded from output/test.z80.bin')
 				x = printprocessor()
 			if x == 'q':
 				break

@@ -6,6 +6,8 @@ non_HL_ = r'(?!110)([01]{3})'
 cc = r'[01]{3}'
 n = r'[01]{8}'
 
+PREFIX_ED = rf'11101101'
+
 def memReqPC(should_increment=True):
 	if Z80().getRegister('PC') != None:
 		Bus().address = Z80().getRegister('PC')

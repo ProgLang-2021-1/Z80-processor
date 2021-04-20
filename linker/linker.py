@@ -25,7 +25,7 @@ def link(filename_loc:str, filename_tags:str, output_file='test.z80.bin'):
 				if len(match := line.split('\t')) == 3:
 					instruction, pc, tag = match
 
-					if instruction != 'CD':
+					if instruction == '38' or instruction == '18':
 						# e must is expresed as byte in two's complement
 						e = '{:02X}'.format((~(int(pc) - tags[tag]) + 1 ) & 0xFF)
 						line = instruction + e

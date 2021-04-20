@@ -69,12 +69,27 @@ def assemble_from_file(input_file, output_file='test.z80.loc'):
 
 				elif match := re.match(ADD_A__HL_, line):  # ADD A, (HL)
 					pc += write_hex(fout, '86')
-
+				
+				elif match := re.match(INC, line):  # INC reg
+					pc += write_byte(fout, Register[match.group('r')].value, pattern='0b00*100')
+				
 				elif match := re.match(HALT, line):  # HALT
 					pc += write_hex(fout, '76')
 
+				elif match := re.match(RET, line):
+					pc += write_hex(fout, 'C9')
+				
+				elif match := re.match(NEG, line):
+					pc += write_hex(fout, 'ED')
+					pc += write_hex(fout, '44')
+				
+
 				elif match := re.match(RET_CC, line):
 					pc += write_byte(fout, FlagCC[match.group('cc')].value, pattern='0b11*000')
+
+				elif match := re.match(JP_CC_TAG, line):
+					pc += write_byte(fout, FlagCC[match.group('cc')].value, pattern='0b11*010') + 2
+					fout.write(f'\t{pc}\t{match.group("tag")}')
 
 				elif match := re.match(JR_C_TAG, line):
 					pc += write_hex(fout, '38') + 1

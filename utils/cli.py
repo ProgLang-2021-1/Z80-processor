@@ -50,23 +50,23 @@ def get_title_module():
 
 
 def register(name1, name2 = '', isflag = False):
-	# wrap = '{}{{0:<2}}{{1:<2}}{} = '.format('[blue]','[/]')
+	# wrap = '{}{{0:<2}}{{1:<2}}{} = '.format('[bold blue]','[/]')
 	if name2 != '':
 		if (name1 in Debug().register and name2 in Debug().register):
-			return ('[blue]{0:<2}{1:<2}[/] = [cyan]{{{0}:02X}} {{{1}:02X}}[/]').format(name1, name2).format(**Z80().registers)
+			return ('[bold blue]{0:<2}{1:<2}[/] = [bold bright_cyan underline]{{{0}:02X}} {{{1}:02X}}[/]').format(name1, name2).format(**Z80().registers)
 		elif (name1 in Debug().register):
-			return ('[blue]{0:<2}{1:<2}[/] = [cyan]{{{0}:02X}}[/] {{{1}:02X}}').format(name1, name2).format(**Z80().registers)
+			return ('[bold blue]{0:<2}{1:<2}[/] = [bold bright_cyan underline]{{{0}:02X}}[/] {{{1}:02X}}').format(name1, name2).format(**Z80().registers)
 		elif (name2 in Debug().register):
-			return ('[blue]{0:<2}{1:<2}[/] = {{{0}:02X}} [cyan]{{{1}:02X}}[/]').format(name1, name2).format(**Z80().registers)
-		return ('[blue]{0:<2}{1:<2}[/] = {{{0}:02X}} {{{1}:02X}}').format(name1, name2).format(**Z80().registers)
+			return ('[bold blue]{0:<2}{1:<2}[/] = {{{0}:02X}} [bold bright_cyan underline]{{{1}:02X}}[/]').format(name1, name2).format(**Z80().registers)
+		return ('[bold blue]{0:<2}{1:<2}[/] = {{{0}:02X}} {{{1}:02X}}').format(name1, name2).format(**Z80().registers)
 	elif isflag:
 		if (name1 in Debug().register or name2 in Debug().register):
-			return ('[blue]{0:<2}[/] = ').format(name1)+'[cyan]'+'   '.join('{{{0}:08b}}'.format(name1).format(**Z80().registers))+'[/]'
-		return ('[blue]{0:<2}[/] = ').format(name1)+'   '.join('{{{0}:08b}}'.format(name1).format(**Z80().registers))
+			return ('[bold blue]{0:<2}[/] = ').format(name1)+'[bold bright_cyan underline]'+'   '.join('{{{0}:08b}}'.format(name1).format(**Z80().registers))+'[/]'
+		return ('[bold blue]{0:<2}[/] = ').format(name1)+'   '.join('{{{0}:08b}}'.format(name1).format(**Z80().registers))
 	if (name1 in Debug().register or name2 in Debug().register):
-		return ('[blue]{0:<4}[/] = [cyan]{{{0}:04X}} [/]').format(name1).format(**Z80().registers)
-	return ('[blue]{0:<4}[/] = {{{0}:04X}} ').format(name1).format(**Z80().registers)
-	
+		return ('[bold blue]{0:<4}[/] = [bold bright_cyan underline]{{{0}:04X}} [/]').format(name1).format(**Z80().registers)
+	return ('[bold blue]{0:<4}[/] = {{{0}:04X}} ').format(name1).format(**Z80().registers)
+
 
 def get_register_module():
 	table = Table(title='Z80', width=70, show_header=False, box=CUSTOM_ROUNDED)
@@ -74,16 +74,16 @@ def get_register_module():
 	table.add_column(' ', justify='center')
 	table.add_column(' ', justify='center')
 
-	table.add_row('[green]Program Control[/]', '[green]Flag Bits[/]')
-	table.add_row(' ', '[bold cyan]     S   Z   -   H   -  P/V  N   C[/bold cyan]')
+	table.add_row('[bold green]Program Control[/]', '[green]Flag Bits[/]')
+	table.add_row(' ', '[bold bold bright_cyan]     S   Z   -   H   -  P/V  N   C[/]')
 	table.add_row(register('PC'),register('F', isflag=True))
 	table.add_row(register('SP'),register('F\'', isflag=True))
-	table.add_row('[green]General Registers[/]', '[green]Alternate Registers[/]')
+	table.add_row('[bold green]General Registers[/]', '[green]Alternate Registers[/]')
 	table.add_row(register('A','F'),register('A\'','F\''))
 	table.add_row(register('B','C'),register('B\'','C\''))
 	table.add_row(register('D','E'),register('D\'','E\''))
 	table.add_row(register('H','L'),register('H\'','L\''))
-	table.add_row('[green]Index Registers[/]', '[green]Hardware Control[/]')
+	table.add_row('[bold green]Index Registers[/]', '[green]Hardware Control[/]')
 	table.add_row(register('IX'),register('I','R'))
 	table.add_row(register('IY'),'')
 	Debug().register = []
@@ -96,23 +96,23 @@ def check_memory_row(row):
 			if (row + j) == Z80().getRegister('PC') or (row + j) == Z80().getRegister('SP'):
 				mem += '[bold red]{:02X} [/bold red]'.format(Memory().memory[row + j])
 			elif (row + j) in Debug().memory:
-				mem += '[cyan]{:02X} [/]'.format(Memory().memory[row + j])
+				mem += '[bold bright_cyan underline]{:02X} [/]'.format(Memory().memory[row + j])
 			else:
 				mem += '{:02X} '.format(Memory().memory[row + j])
 		else:
 			if (row + j) == Z80().registers['PC'] or (row + j) == Z80().getRegister('SP'):
 				mem += '[bold red]{:02X} [/bold red]'.format(0)
 			elif (row + j) in Debug().memory:
-				mem += '[cyan]{:02X} [/]'.format(0)
+				mem += '[bold bright_cyan underline]{:02X} [/]'.format(0)
 			else:
 				mem += '{:02X} '.format(0)
 	return mem
 def get_memory_module():
 	table = Table(title='Memory', width=70, box=CUSTOM_ROUNDED)
-	table.add_column('[bold blue]Offset[/bold blue]', justify='right')
+	table.add_column('[bold bold blue]Offset[/bold blue]', justify='right')
 	table.add_column('[bold green]00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F [/]', justify='left')
 	for i in range(0, 0xFFF+1):
-		if match := re.search(r'((?!(00 ){16})((\[.*\])?[0-9A-F]{2} (\[/.*\])?){16})',check_memory_row(i<<4)):   
+		if match := re.search(r'((?!(00 ){16})((\[.*\])?[0-9A-F]{2} (\[/.*\])?){16})',check_memory_row(i<<4)):
 			table.add_row('[bold green]{:04X}[/]'.format(i<<4),match.group(0))
 	Debug().memory = []
 	return table

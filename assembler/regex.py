@@ -24,12 +24,19 @@ SUB_R = fr'^{space}SUB +(?P<r>{r}){line_ending}$'
 ADD_A_R = fr'^{space}ADD +A, *(?P<r>{r}){line_ending}$'
 ADD_A__HL_ = fr'^{space}ADD +A, *\(HL\){line_ending}$'
 
+INC = fr'^{space}INC +(?P<r>{r}){line_ending}$'
 HALT = fr'^{space}HALT{line_ending}$'
+
+JP_CC_TAG = fr'{space}JP +(?P<cc>{cc}), *(?P<tag>(\w+)){line_ending}$'
 
 JR_C_TAG = fr'^{space}JR +C, *(?P<tag>\w+){line_ending}$'
 
 # FIXME: Ambiguity when cc is used as a tag
 JR_TAG = fr'^{space}JR +(?P<tag>(\w+)){line_ending}$'
+
+RET = fr'^{space}RET{line_ending}$'
+
+NEG = fr'^{space}NEG{line_ending}$'
 
 RET_CC = fr'^{space}RET +(?P<cc>{cc}){line_ending}$'
 

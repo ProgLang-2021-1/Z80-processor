@@ -26,7 +26,9 @@ def runcli():
 			console.print('Not implemented yet', justify='center')
 		elif proccess == 'a':
 			filename = console.input(prompt='====> examples/')
-			assemble_from_file(f'examples/{filename}.z80.asm')
+			filename = filename if ".z80.asm" in filename else f'{filename}.z80.asm'
+			assemble_from_file(f'examples/{filename}')
+			console.print(f'Assembling: examples/{filename}')
 			console.print('File created at: output/test.z80.loc')
 			console.print('File created at: output/test.z80.loc.tag')
 		elif proccess == 'l':
@@ -36,7 +38,9 @@ def runcli():
 			link('output/test.z80.loc', 'output/test.z80.loc.tag')
 		elif proccess == 'al':
 			filename = console.input(prompt='====> examples/')
-			assemble_from_file(f'examples/{filename}.z80.asm')
+			filename = filename if ".z80.asm" in filename else f'{filename}.z80.asm'
+			assemble_from_file(f'examples/{filename}')
+			console.print(f'Assembling: examples/{filename}')
 			console.print('File created at: output/test.z80.loc')
 			console.print('File created at: output/test.z80.loc.tag')
 			console.print('Linking from: output/test.z80.loc')

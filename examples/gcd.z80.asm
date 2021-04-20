@@ -1,11 +1,11 @@
 ; Inputs: a, b
 ; Outputs: a = gcd(a, b)
-; Destroys: c
 ; Assumes: a and b are positive one-byte integers
     org AFFAh
 start: ;05
-	ld a, 02h
-	ld b, 02h
+	ld a, 0Ah
+	ld b, 0Fh
+    ld e, b                 ; Stores the initial value of b in e
 	call gcd ;7
 	halt
 gcd: ; 0D

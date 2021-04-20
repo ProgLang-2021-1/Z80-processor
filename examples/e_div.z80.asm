@@ -1,7 +1,7 @@
 	ORG AA10H
 START:
-	LD C, EFH	; Dividend
-	LD B, FBH	; Divisor
+	LD C, 1AH	; Dividend
+	LD B, 03H	; Divisor
 	CALL S_DIVISION
 	HALT
 
@@ -34,7 +34,7 @@ B_NEGATIVE:
 	LD A, D
 	NEG
 	LD D, A; Q = -Q
-	
+
 	LD A, E ; R = tmp
 	RET
 
@@ -58,7 +58,7 @@ C_NEGATIVE:
 	LD A, B
 	SUB E; R = B - tmp (R)
 
-	; TODO: This should return to 
+	; TODO: This should return to
 	RET
 
 C_NEGATIVE_R_Z:
